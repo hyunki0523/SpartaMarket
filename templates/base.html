@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="kor">
+<head>
+    <meta charset="UTF-8">
+    <title>SpartaMarketMadeByHYun</title>
+</head>
+<body>
+<nav>
+ {% if request.user.is_authenticated %}
+        <h3>안녕하세요, {{ user }}님</h3>
+        <form action="{% url 'accounts:logout' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="로그아웃">
+        </form>
+    {% else %}
+        <a href="{% url 'accounts:login'%}">로그인</a>
+    {% endif %}
+</nav>
+    {% block content %}
+    	
+    {% endblock content %}
+</body>
+</html>

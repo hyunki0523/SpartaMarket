@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ posts.title }}</h1>
+
+<p>가격: {{ posts.price }}</p>
+<div>
+<p>내용: {{ posts.content }}</p>
+</div>
+<a href="{% url 'post:update' Post.id %}"><button>글수정</button></a>
+    <a href="{% url 'post:list' %}">목록 보기</a>
+
+    <form action="{% url 'post:delete' Post.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+    </form>
+<p>작성일시: {{ posts.created_at }}</p>
+<p>수정일시: {{ posts.updated_at }}</p>
+{% endblock content %}

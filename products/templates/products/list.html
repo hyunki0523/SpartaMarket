@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'post:create' %}"> 글 작성하기 </a>
+    	{% for post in posts %}
+            <div>
+                <a href="{% url 'post:detail' post.id %}">{{ post.id }}{{ post.title }}</a><hr>
+
+            </div>
+        {% endfor %}
+
+{% endblock content %}
