@@ -3,18 +3,55 @@
 {% block content %}
 
 <h1>{{ posts.title }}</h1>
+<p>작성자: {{ posts.author.username }}</p>
 
 <p>가격: {{ posts.price }}</p>
 <div>
 <p>내용: {{ posts.content }}</p>
-</div>
-<a href="{% url 'post:update' Post.id %}"><button>글수정</button></a>
-    <a href="{% url 'post:list' %}">목록 보기</a>
+    {% if posts.image %}
+        <img src="{{ products.image.url }}">
+    {% endif %}
 
-    <form action="{% url 'post:delete' Post.id %}" method="POST">
-        {% csrf_token %}
-        <input type="submit" value="삭제">
-    </form>
+</div>
+    {% if user == posts.author %}
+        <a href="{% url 'post:update' posts.id %}"><button>글수정</button></a>
+        <a href="{% url 'post:list' %}">목록 보기</a>
+
+        <form action="{% url 'post:delete' posts.id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="삭제">
+        </form>
+    {% endif %}
 <p>작성일시: {{ posts.created_at }}</p>
 <p>수정일시: {{ posts.updated_at }}</p>
+
+
+    {% if request.user.is_authenticated %}
+    <br>
+    <hr>
+    <h3>댓글 {{ comments|length }}개</h3>
+    <form action="{% url "products:comment_create" posts.pk %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <input type="submit" value="댓글작성">
+    </form>
+    {% endif %}
+
+    {% for comment in comments %}
+    <ul>
+        <li>{{ comment.content }} - {{ comment.user.username }}</li>
+
+        {% if user == comment.user %}
+        <form action="{% url "products:comment_delete" posts.pk comment.pk%}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="삭제">
+        </form>
+        {% endif %}
+
+    </ul>
+
+    {% empty %}
+    <p>댓글이 없습니다.</p>
+
+    {% endfor %}
 {% endblock content %}

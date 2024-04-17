@@ -1,9 +1,9 @@
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from .models import Post
 from .forms import PostForm
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods, require_POST
+
 
 # Create your views here.
 
@@ -16,8 +16,8 @@ def post_list(request):
     return render(request, "products/list.html", context)
 
 
-def post_detail(request, post_id):
-    posts = get_object_or_404(Post, pk=post_id)
+def post_detail(request, pk):
+    posts = get_object_or_404(Post, pk=pk)
     context = {
         "posts": posts
     }
@@ -26,37 +26,64 @@ def post_detail(request, post_id):
 
 def create(request):
     if request.method == "POST":
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save()
-            return redirect("products/detail", post.id)
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect("post:detail", post.id)
     else:
         form = PostForm()
     context = {"form": form}
     return render(request, "products/create.html", context)
 
-# @login_required
-# @require_POST
-def delete(request, post_id):
+@login_required
+@require_POST
+def delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
     if request.user.is_authenticated:
-        post = get_object_or_404(Post, pk=post_id)
-        post.delete()
-    return redirect("products/list")
-#
-#
-# @login_required
-# @require_http_methods(["GET", "POST"])
-def update(request, post_id):
-    post = Post.objects.get(pk=post_id)
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            article = form.save()
-            return redirect("products/detail", article.pk)
+        if post.author == request.user:
+            post = get_object_or_404(Post, pk=pk)
+            post.delete()
+    return redirect("post:list")
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def update(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if post.author != request.user:
+        if request.method == "POST":
+            form = PostForm(request.POST, instance=post)
+            if form.is_valid():
+                article = form.save()
+                return redirect("post:detail", post.id)
+        else:
+            form = PostForm(instance=post)
     else:
-        form = PostForm(instance=post)
+        return redirect("post:list")
+
     context = {
         "form": form,
-        "posts": post,
+        "post": post,
     }
-    return render(request, "products/create.html", context)
+    return render(request, "products/update.html", context)
+
+@require_POST
+def comment_create(request, pk):
+    article = get_object_or_404(Post, pk=pk)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.article = article
+        comment.user = request.user
+        comment.save()
+        return redirect("articles:article_detail", article.pk)
+
+
+@require_POST
+def comment_delete(request, pk, comment_pk):
+    if request.user.is_authenticated:
+        comment = get_object_or_404(Comment, pk=comment_pk)
+        if comment.user == request.user:
+            comment.delete()
+    return redirect("articles:article_detail", pk)
