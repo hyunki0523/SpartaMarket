@@ -5,17 +5,18 @@
 
     <p>회원가입 일 : {{ profile_user.date_joined }}</p>
     <p>e-mail : {{ profile_user.email_user }}</p>
+    <p>팔로워 수 : {{ profile_user.followings.count}}</p>
 
-{#    {% if request.user != member %}#}
-{#        <form action="{% url "users:follow" member.pk %}" method="POST">#}
-{#            {% csrf_token %}#}
-{#            {% if request.user in member.followers.all %}#}
-{#                <input type="submit" value="언팔로우">#}
-{#            {% else %}#}
-{#                <input type="submit" value="팔로우">#}
-{#            {% endif %}#}
-{#        </form>#}
-{#    {% endif %}#}
+    {% if request.user != member %}
+        <form action="{% url "accounts:follow" profile_user.pk %}" method="POST">
+            {% csrf_token %}
+            {% if request.user in member.followers.all %}
+                <input type="submit" value="언팔로우">
+            {% else %}
+                <input type="submit" value="팔로우">
+            {% endif %}
+        </form>
+    {% endif %}
     <ul>
         <h2> 작성글 목록 </h2>
     {% for list in profile_user.post_set.all %}

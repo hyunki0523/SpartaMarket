@@ -16,12 +16,12 @@
     {% if user == posts.author %}
         <a href="{% url 'post:update' posts.id %}"><button>글수정</button></a>
         <a href="{% url 'post:list' %}">목록 보기</a>
-
         <form action="{% url 'post:delete' posts.id %}" method="POST">
             {% csrf_token %}
             <input type="submit" value="삭제">
         </form>
     {% endif %}
+<a href="{% url "accounts:profile" posts.author.id %}">작성자 {{ posts.author.username }} 의 프로필페이지</a>
 <p>작성일시: {{ posts.created_at }}</p>
 <p>수정일시: {{ posts.updated_at }}</p>
 

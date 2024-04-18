@@ -5,6 +5,7 @@ from django.contrib.auth.forms import (
 )
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import update_session_auth_hash
@@ -89,3 +90,14 @@ def profile(request, user_id):
 
     }
     return render(request, "accounts/profile.html", context)
+
+def follow(request, user_id):
+    if request.user.is_authenticated:
+        member = get_object_or_404(get_user_model(), pk=user_id)
+        if request.user != member:
+            if request.user in member.followers.all():
+                member.followers.remove(request.user)
+            else:
+                member.followers.add(request.user)
+        return redirect("accounts:profile", member.id)
+    return redirect("accounts:login")
