@@ -9,9 +9,11 @@ class Post(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    check_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="check_posts")
 
     def __str__(self):
         return self.title
+
 
 
 class Comment(models.Model):

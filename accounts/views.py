@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.forms import (
     AuthenticationForm,
     PasswordChangeForm,
@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import update_session_auth_hash
 from .forms import CustomUserChangeForm, CustomUserCreationForm
+from .models import User
 
 
 @require_http_methods(["GET", "POST"])
@@ -79,3 +80,12 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     context = {"form": form}
     return render(request, "accounts/change_password.html", context)
+
+def profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    context = {
+        "check_posts": user.check_posts.all(),
+        "profile_user": user,
+
+    }
+    return render(request, "accounts/profile.html", context)

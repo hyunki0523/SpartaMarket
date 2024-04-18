@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ profile_user.username }}의 프로필 페이지</h1>
+
+    <p>회원가입 일 : {{ profile_user.date_joined }}</p>
+    <p>e-mail : {{ profile_user.email_user }}</p>
+
+{#    {% if request.user != member %}#}
+{#        <form action="{% url "users:follow" member.pk %}" method="POST">#}
+{#            {% csrf_token %}#}
+{#            {% if request.user in member.followers.all %}#}
+{#                <input type="submit" value="언팔로우">#}
+{#            {% else %}#}
+{#                <input type="submit" value="팔로우">#}
+{#            {% endif %}#}
+{#        </form>#}
+{#    {% endif %}#}
+    <ul>
+        <h2> 작성글 목록 </h2>
+    {% for list in profile_user.post_set.all %}
+        <li>
+            <a href="{% url "post:detail" list.id %}">
+            {{ list.title }},
+            </a>
+        </li>
+    {% endfor %}
+
+    </ul>
+
+
+    <ul>
+        <h2> 찜 목록 </h2>
+    {% for checkpost in check_posts  %}
+        <li>
+            <a href="{% url "post:detail" checkpost.id %}">
+            {{ checkpost.title }}, {{ checkpost.price }}원
+            </a>
+        </li>
+    {% endfor %}
+    
+    </ul>
+
+    <a href="{% url "post:list" %}">홈으로 돌아가기</a>
+
+{% endblock content %}
+
+
+

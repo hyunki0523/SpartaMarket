@@ -96,3 +96,15 @@ def comment_delete(request, pk, comment_pk):
         if comment.user == request.user:
             comment.delete()
     return redirect("post:detail", pk)
+
+
+@require_POST
+def check(request, pk):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)
+        if post.check_users.filter(pk=request.user.pk).exists():
+            post.check_users.remove(request.user)  # 찜 취소
+        else:
+            post.check_users.add(request.user)  # 찜
+        return redirect("post:list")
+    return redirect("accounts:login")

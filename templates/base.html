@@ -15,7 +15,7 @@
     <div class="navbar">
 
         {% if request.user.is_authenticated %}
-            <h3>Hello, {{ request.user.username }}</h3>
+            <a href="{% url "accounts:profile" user.id %}">Hello,{{ request.user.username }}</a>
             <form action="{% url 'accounts:logout' %}" method="POST">
                 {% csrf_token %}
                 <input type="submit" value="로그아웃"></input>

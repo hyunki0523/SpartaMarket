@@ -12,8 +12,16 @@
 
     	{% for post in posts %}
             <div>
-                <a href="{% url 'post:detail' post.id %}">{{ post.id }}{{ post.title }}{{ post.title }}{{ post.title }}</a><hr>
-
+            <a href="{% url 'post:detail' post.id %}">{{ post.id }}{{ post.title }}<br>{{ post.price }}<br>{{ post.auther }}</a><br>
+            <form action="{% url "post:check" post.pk %}" method="POST">
+                {% csrf_token %}
+                {% if request.user in post.check_users.all %}
+                    <input type="submit" value="찜하기 취소">
+                {% else %}
+                    <input type="submit" value="찜하기">
+                {% endif %}
+            </form>
+            <hr>
             </div>
         {% endfor %}
 
