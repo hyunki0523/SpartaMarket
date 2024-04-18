@@ -30,7 +30,7 @@
     <br>
     <hr>
     <h3>댓글 {{ comments|length }}개</h3>
-    <form action="{% url "products:comment_create" posts.pk %}" method="POST">
+    <form action="{% url "post:comment_create" posts.pk %}" method="POST">
         {% csrf_token %}
         {{ comment_form.as_p }}
         <input type="submit" value="댓글작성">
@@ -38,17 +38,17 @@
     {% endif %}
 
     {% for comment in comments %}
-    <ul>
+        <ul>
         <li>{{ comment.content }} - {{ comment.user.username }}</li>
 
         {% if user == comment.user %}
-        <form action="{% url "products:comment_delete" posts.pk comment.pk%}" method="POST">
+        <form action="{% url "post:comment_delete" posts.pk comment.pk%}" method="POST">
             {% csrf_token %}
             <input type="submit" value="삭제">
         </form>
         {% endif %}
 
-    </ul>
+        </ul>
 
     {% empty %}
     <p>댓글이 없습니다.</p>

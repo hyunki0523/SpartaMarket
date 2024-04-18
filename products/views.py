@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
 
@@ -18,10 +18,15 @@ def post_list(request):
 
 def post_detail(request, pk):
     posts = get_object_or_404(Post, pk=pk)
+    comment_form = CommentForm()
+    comments = posts.comments.all().order_by("-pk")
     context = {
-        "posts": posts
+        "posts": posts,
+        "comment_form": comment_form,
+        "comments": comments,
     }
     return render(request, "products/detail.html", context)
+
 
 
 def create(request):
@@ -70,14 +75,18 @@ def update(request, pk):
 
 @require_POST
 def comment_create(request, pk):
-    article = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(Post, pk=pk)
     form = CommentForm(request.POST)
     if form.is_valid():
         comment = form.save(commit=False)
-        comment.article = article
+        comment.post = post
         comment.user = request.user
+
+        # comment.post_id = pk
+        # print("comment.post_id:", comment.post_id)
         comment.save()
-        return redirect("articles:article_detail", article.pk)
+
+        return redirect("post:detail", post.pk)
 
 
 @require_POST
@@ -86,4 +95,4 @@ def comment_delete(request, pk, comment_pk):
         comment = get_object_or_404(Comment, pk=comment_pk)
         if comment.user == request.user:
             comment.delete()
-    return redirect("articles:article_detail", pk)
+    return redirect("post:detail", pk)
