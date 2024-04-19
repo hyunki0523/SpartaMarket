@@ -34,31 +34,28 @@
             
       
         <li class="nav-item">
-          <form class="d-flex" action="{% url 'accounts:logout' %}" method="POST">
+          <a class="nav-link"><form action="{% url 'accounts:logout' %}" method="POST">
                 {% csrf_token %}
                 <input type="submit" value="로그아웃"></input>
-            </form>
+            </form></a>
         </li>
         <li class="nav-item">
-          <a href="{% url "accounts:update" %}">회원정보수정</a>
+          <a href="{% url "accounts:update" %}"><button class="btn btn-outline-light">회원정보수정</button></a>
       <li>
       {% else %}
-            <a href="{% url 'accounts:login' %}">로그인</a>
-            <a href="{% url "accounts:signup" %}">회원가입</a>
+           <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:login' %}"><button class="btn btn-outline-light">로그인</button></a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="{% url "accounts:signup" %}"><button class="btn btn-outline-light">회원가입</button></a>
+        </li>
+            
+            
        
         </li>    
     
-    {% endif %}      
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                login
-                </a>
-                <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'accounts:login' %}">Sign-in</a></li>
-                <li><a class="dropdown-item" href="{% url "accounts:signup" %}">Log-in</a></li>
-            </ul>
-        </li>
+    {% endif %}     
+  
       </ul>
     </div>
   </div>
