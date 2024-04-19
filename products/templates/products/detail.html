@@ -1,8 +1,29 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
 <h1>{{ posts.title }}</h1>
+    <div id="carouselExample" class="carousel slide">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static "products/13.jpg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static "products/14.jpg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static "products/15.jpg" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
 <p>작성자: {{ posts.author.username }}</p>
 
 <p>가격: {{ posts.price }}</p>
@@ -13,13 +34,17 @@
     {% endif %}
 
 </div>
+    <a href="{% url "post:list" %}">
+        <button class="btn btn-outline-dark" type="button" >목록으로</button></a>
     {% if user == posts.author %}
-        <a href="{% url 'post:update' posts.id %}"><button>글수정</button></a>
-        <a href="{% url 'post:list' %}">목록 보기</a>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a href="{% url 'post:update' posts.id %}"><button class="btn btn-outline-dark" type="submit" >글수정</button></a>
+
+
         <form action="{% url 'post:delete' posts.id %}" method="POST">
             {% csrf_token %}
             <input type="submit" value="삭제">
-        </form>
+        </form></div>
     {% endif %}
 <a href="{% url "accounts:profile" posts.author.id %}">작성자 {{ posts.author.username }} 의 프로필페이지</a>
 <p>작성일시: {{ posts.created_at }}</p>
@@ -38,6 +63,7 @@
     {% endif %}
 
     {% for comment in comments %}
+
         <ul>
         <li>{{ comment.content }} - {{ comment.user.username }}</li>
 

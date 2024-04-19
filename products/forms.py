@@ -5,7 +5,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = models.Post
         fields = "__all__"
-        exclude = ['author']
+        exclude = ['author', 'check_users']
 
 
 class CommentForm(forms.ModelForm):
