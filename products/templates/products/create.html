@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br><br>
+<h2>새 글 작성</h2>
+
+<form action="{% url 'post:create' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button class="btn btn-outline-dark" type="submit" >저장</button>
+     <a href="{% url "post:list" %}">
+    <button class="btn btn-outline-dark" type="button" >목록으로</button></a>
+
+    </div>
+
+</form>
+
+
+
+
+{% endblock content %}

@@ -1,2 +1,0 @@
-# SpartaMarket
-djangopjt
