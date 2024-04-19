@@ -10,40 +10,36 @@
 
     </a>
 {% else %}
-    <h3><a href="{% url "accounts:login" %}">게시글을 작성하시려면 여기를 눌러 로그인하세요</a></h3>
+    <h3><span class="badge text-bg-secondary">Notifications</span> <a href="{% url "accounts:login" %}">게시글을 작성하시려면 여기를 눌러 로그인하세요 </a></h3>
+    <br>
+    <br>
 {% endif %}
 {% for post in posts %}
- <div class="row row-cols-1 row-cols-md-3 g-4">
+
   <div class="col">
-<div class="card" style="width: 18rem;">
-  <img src="{% static "products/12.png" %}" class="card-img-top" alt="...">
+<div class="card" style="width: 18rem; text-align: center">
+  <img src="{% static "products/12.png" %}" class="card-img-top" alt="게시자가 올린 제품의 사진 이였던 것">
   <div class="card-body">
-    <h5 class="card-title"><a href="{% url 'post:detail' post.id %}">{{ post.id }}{{ post.title }}</h5>
-    <p class="card-text">{{ post.content }}</p>
+    <h5 class="card-title"><a href="{% url 'post:detail' post.id %}">{{ post.title }} </a></h5>
+    <p class="card-text"><br>{{ post.content }}<br></p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">{{ post.price }} 원</li>
-    <li class="list-group-item">{{ post.auther }}</li>
+    <li class="list-group-item"> {{ post.price }} 원</li>
+    <li class="list-group-item"> {{ post.auther }} 작성자</li>
   </ul>
   <div class="card-body">
     <a class="card-link"><form action="{% url "post:check" post.pk %}" method="POST">
                 {% csrf_token %}
                 {% if request.user in post.check_users.all %}
-                    <input type="submit" value="찜하기 취소">
+                    <input class="btn btn-outline-dark" type="submit" value="찜하기 취소">
                 {% else %}
-                    <input type="submit" value="찜하기">
+                    <input class="btn btn-outline-dark" type="submit" value="찜하기">
                 {% endif %}
             </form></a>
   </div>
-</div>
-
-            <div>
-            <br><br></a><br>
-
-            <hr>
-            </div>
 
   </div>
+<br><br><br>
 </div>
 {% endfor %}
 {% endblock content %}

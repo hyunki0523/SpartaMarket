@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-    <h1>{{ profile_user.username }}의 프로필 페이지</h1>
+    <br><h1>{{ profile_user.username }}의 프로필 페이지</h1><br>
+     <img src="{% static "accouts/user.png" %}" class="d-block w-15">
+
+    <p> 자기 소개글 과 프로필사진 이 들어갈 공간</p>
 
     <p>회원가입 일 : {{ profile_user.date_joined }}</p>
     <p>e-mail : {{ profile_user.email_user }}</p>
@@ -11,18 +14,18 @@
         <form action="{% url "accounts:follow" profile_user.pk %}" method="POST">
             {% csrf_token %}
             {% if request.user in member.followers.all %}
-                <input type="submit" value="언팔로우">
+                <input class="btn btn-outline-dark" type="submit" value="언팔로우">
             {% else %}
-                <input type="submit" value="팔로우">
+                <input class="btn btn-outline-dark" type="submit" value="팔로우">
             {% endif %}
         </form>
     {% endif %}
-    <ul>
+    <br><ul>
         <h2> 작성글 목록 </h2>
     {% for list in profile_user.post_set.all %}
-        <li>
+       <br> <li>
             <a href="{% url "post:detail" list.id %}">
-            {{ list.title }},
+           <button class="btn btn-outline-dark"> {{ list.title }} </button>
             </a>
         </li>
     {% endfor %}
@@ -31,13 +34,13 @@
 
 
     <ul>
-        <h2> 찜 목록 </h2>
+        <br><h2> 찜 목록 </h2><br>
     {% for checkpost in check_posts  %}
         <li>
             <a href="{% url "post:detail" checkpost.id %}">
-            {{ checkpost.title }}, {{ checkpost.price }}원
+            <button class="btn btn-outline-dark"> {{ checkpost.title }} : {{ checkpost.price }}원</button>
             </a>
-        </li>
+        </li><br>
     {% endfor %}
     
     </ul>

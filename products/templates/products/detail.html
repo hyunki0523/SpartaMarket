@@ -2,17 +2,17 @@
 {% load static %}
 {% block content %}
 
-<h1>{{ posts.title }}</h1>
+<br><br><h1>{{ posts.title }}</h1><br><br>
     <div id="carouselExample" class="carousel slide">
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="{% static "products/13.jpg" class="d-block w-100" alt="...">
+        <img src="{% static "products/13.png" %}" class="d-block w-50" alt="판매자 사진이였던 것">
     </div>
     <div class="carousel-item">
-      <img src="{% static "products/14.jpg" class="d-block w-100" alt="...">
+       <img src="{% static "products/14.png" %}" class="d-block w-50" alt="...">
     </div>
     <div class="carousel-item">
-      <img src="{% static "products/15.jpg" class="d-block w-100" alt="...">
+      <img src="{% static "products/15.png" %}" class="d-block w-50" alt="...">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -26,7 +26,7 @@
 </div>
 <p>작성자: {{ posts.author.username }}</p>
 
-<p>가격: {{ posts.price }}</p>
+<p>가격: {{ posts.price }} 원</p>
 <div>
 <p>내용: {{ posts.content }}</p>
     {% if posts.image %}
@@ -34,8 +34,7 @@
     {% endif %}
 
 </div>
-    <a href="{% url "post:list" %}">
-        <button class="btn btn-outline-dark" type="button" >목록으로</button></a>
+
     {% if user == posts.author %}
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <a href="{% url 'post:update' posts.id %}"><button class="btn btn-outline-dark" type="submit" >글수정</button></a>
@@ -43,12 +42,15 @@
 
         <form action="{% url 'post:delete' posts.id %}" method="POST">
             {% csrf_token %}
-            <input type="submit" value="삭제">
+            <input class="btn btn-outline-dark" type="submit" value="삭제">
         </form></div>
     {% endif %}
-<a href="{% url "accounts:profile" posts.author.id %}">작성자 {{ posts.author.username }} 의 프로필페이지</a>
-<p>작성일시: {{ posts.created_at }}</p>
-<p>수정일시: {{ posts.updated_at }}</p>
+
+<p> {{ posts.updated_at }} 에 최종 수정됨</p><br>
+   <a href="{% url "post:list" %}">
+        <button class="btn btn-outline-dark" type="button" >목록으로</button></a>
+<a href="{% url "accounts:profile" posts.author.id %}"><button type="button" class="btn btn-outline-dark">작성자 "{{ posts.author.username }}" 의 프로필페이지</button></a>
+
 
 
     {% if request.user.is_authenticated %}
@@ -58,19 +60,22 @@
     <form action="{% url "post:comment_create" posts.pk %}" method="POST">
         {% csrf_token %}
         {{ comment_form.as_p }}
-        <input type="submit" value="댓글작성">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <input class="btn btn-outline-dark" type="submit" value="댓글작성">
+        </div>
     </form>
     {% endif %}
 
     {% for comment in comments %}
 
-        <ul>
-        <li>{{ comment.content }} - {{ comment.user.username }}</li>
+        <ul><br>
+        <li>{{ comment.content }} - {{ comment.user.username }}</li><br>
 
         {% if user == comment.user %}
         <form action="{% url "post:comment_delete" posts.pk comment.pk%}" method="POST">
             {% csrf_token %}
-            <input type="submit" value="삭제">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <input class="btn btn-outline-dark" type="submit" value="삭제"></div>
         </form>
         {% endif %}
 
